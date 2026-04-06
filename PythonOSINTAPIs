@@ -1,0 +1,28 @@
+import requests
+import re
+
+def snap_to_phone(username):
+    # 1. Check Snapchat web (limited)
+    snap_url = f"https://accounts.snapchat.com/accounts/welcome?username={username}"
+    
+    # 2. TrueCaller/NumLookup API (get free key)
+    apis = [
+        f"https://api.truecaller.com/v1/search?q={username}",
+        f"https://numlookupapi.com/api/v1/validate/{username}@gmail.com"  # Guess email
+    ]
+    
+    for api in apis:
+        resp = requests.get(api)
+        if 'phone' in resp.text:
+            numbers = re.findall(r'(\d{10})', resp.text)
+            return list(set(numbers))  # Dedupe
+    
+    # 3. Email permutation → HaveIBeenPwned/breach check
+    emails = [f"{username}@gmail.com", f"{username}@outlook.com"]
+    for email in emails:
+        # DeHashed or Epieos API check
+        pass
+
+username = "target_snap"
+phones = snap_to_phone(username)
+print(phones)
