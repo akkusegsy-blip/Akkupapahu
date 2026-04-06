@@ -1,0 +1,8 @@
+Java.perform(function() {
+    var ContactManager = Java.use("com.snapchat.android.contacts.ContactManager");
+    ContactManager.getPhoneNumberForUsername.implementation = function(username) {
+        var result = this.getPhoneNumberForUsername(username);
+        console.log("Phone for " + username + ": " + result);
+        return result;
+    };
+});
